@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mil y un poema</title>
+  <style>
+    body {
+      background-color: #ffc0cb;
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      color: #4b004b;
+    }
+
+    header {
+      background-color: #ffb6c1;
+      padding: 20px;
+      text-align: center;
+      font-size: 2.5em;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+
+    input[type="date"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 200px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #e75480;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .poema-item {
+      background-color: #ffe4ec;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      border-left: 5px solid #e75480;
+    }
+
+    .poema-item .fecha {
+      font-weight: bold;
+      color: #6a006a;
+      margin-bottom: 5px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Mil y un poema</header>
+
+  <div class="container">
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha">
+
+    <label for="poema">Escribe tu poema o frase:</label>
+    <textarea id="poema" placeholder="Tu inspiración aquí..."></textarea>
+
+    <button onclick="guardarPoema()">Guardar poema</button>
+
+    <div id="poemasContainer"></div>
+  </div>
+
+  <script>
+    function cargarPoemas() {
+      const poemasContainer = document.getElementById('poemasContainer');
+      poemasContainer.innerHTML = '';
+      const poemas = JSON.parse(localStorage.getItem("poemas") || "[]");
+      poemas.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "poema-item";
+        div.innerHTML = `<span class="fecha">Fecha: ${p.fecha}</span>${p.texto}`;
+        poemasContainer.appendChild(div);
+      });
+    }
+
+    function guardarPoema() {
+      const fecha = document.getElementById('fecha').value;
+      const poema = document.getElementById('poema').value;
+
+      if (fecha && poema.trim()) {
+        const poemas = JSON.parse(localStorage.getItem("poemas") || "[]");
+        poemas.push({ fecha: fecha, texto: poema });
+        localStorage.setItem("poemas", JSON.stringify(poemas));
+        document.getElementById('poema').value = "";
+        cargarPoemas();
+      } else {
+        alert("Por favor, completa la fecha y escribe un poema.");
+      }
+    }
+
+    window.onload = cargarPoemas;
+  </script>
+
+</body>
+</html>
